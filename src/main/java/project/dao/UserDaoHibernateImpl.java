@@ -13,23 +13,23 @@ public class UserDaoHibernateImpl implements UserDao {
     private EntityManager entityManager;
 
     @Override
-    public List<User> get() {
+    public List<User> getAllUsers() {
         return entityManager.createQuery("select user from User user", User.class).getResultList();
     }
 
     @Override
-    public void save(User user) {
+    public void saveUser(User user) {
         entityManager.persist(user);
     }
 
     @Override
-    public void delete(int id) {
+    public void deleteUserById(int id) {
         entityManager.remove(entityManager.find(User.class,id));
     }
 
     @Override
-    public void update(int id, User user) {
-        User us = show(id);
+    public void updateUserById(int id, User user) {
+        User us = getUserById(id);
         us.setName(user.getName());
         us.setLastName(user.getLastName());
         us.setEmail(user.getEmail());
@@ -37,7 +37,7 @@ public class UserDaoHibernateImpl implements UserDao {
     }
 
     @Override
-    public User show(int id) {
+    public User getUserById(int id) {
         return entityManager.find(User.class, id);
     }
 }
