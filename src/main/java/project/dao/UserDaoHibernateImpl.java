@@ -13,31 +13,31 @@ public class UserDaoHibernateImpl implements UserDao {
     private EntityManager entityManager;
 
     @Override
-    public List<User> getUser() {
+    public List<User> get() {
         return entityManager.createQuery("select user from User user", User.class).getResultList();
     }
 
     @Override
-    public void saveUser(User user) {
+    public void save(User user) {
         entityManager.persist(user);
     }
 
     @Override
-    public void dellUser(int id) {
+    public void delete(int id) {
         entityManager.remove(entityManager.find(User.class,id));
     }
 
     @Override
-    public void updateUser(int id, User user) {
-        User us = showId(id);
+    public void update(int id, User user) {
+        User us = show(id);
         us.setName(user.getName());
         us.setLastName(user.getLastName());
-        us.setMail(user.getMail());
+        us.setEmail(user.getEmail());
         us.setAge(user.getAge());
     }
 
     @Override
-    public User showId(int id) {
+    public User show(int id) {
         return entityManager.find(User.class, id);
     }
 }

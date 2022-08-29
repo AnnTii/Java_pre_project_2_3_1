@@ -1,6 +1,10 @@
 package project.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table
@@ -10,21 +14,28 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column
+    @NotEmpty(message = "Name cannot be empty")
+    @Size(min = 2, max = 20,message = "Invalid input, name must be between 2 and 20 characters")
     private String name;
     @Column
+    @NotEmpty(message = "LastName cannot be empty")
+    @Size(min = 2, max = 20,message = "Invalid input, lastName must be between 2 and 20 characters")
     private String lastName;
     @Column
-    private String mail;
+    @NotEmpty(message = "Email cannot be empty")
+    @Email(message = "Email should be valid")
+    private String email;
     @Column
+    @Min(value = 0, message = "Invalid input, age cannot be negative")
     private int age;
 
     public User() {
     }
 
-    public User(String name, String lastName, String mail, int age) {
+    public User(String name, String lastName, String email, int age) {
         this.name = name;
         this.lastName = lastName;
-        this.mail = mail;
+        this.email = email;
         this.age = age;
     }
 
@@ -52,12 +63,12 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getMail() {
-        return mail;
+    public String getEmail() {
+        return email;
     }
 
-    public void setMail(String mail) {
-        this.mail = mail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public int getAge() {
@@ -74,7 +85,7 @@ public class User {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", mail='" + mail + '\'' +
+                ", email='" + email + '\'' +
                 ", age=" + age +
                 '}';
     }

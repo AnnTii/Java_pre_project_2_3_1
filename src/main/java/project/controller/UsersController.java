@@ -3,10 +3,11 @@ package project.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import project.model.User;
 import project.service.UserService;
-
+import javax.validation.Valid;
 
 @Controller
 public class UsersController {
@@ -20,43 +21,42 @@ public class UsersController {
 
     @GetMapping("/")
     public String main(Model model) {
-        model.addAttribute("user", userService.getUser());
+        model.addAttribute("user", userService.get());
         return "main";
     }
 
     @GetMapping(value = "/new")
-    public String save(Model model) {
-        model.addAttribute("user", new User());
+    public String newUser(@ModelAttribute("user") User user) {
         return "new";
     }
 
     @PostMapping
-    public String create(@ModelAttribute("user") User user) {
-        userService.saveUser(user);
+    public String create(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()){
+            return "new";
+        }
+        userService.save(user);
         return "redirect:/";
     }
 
     @GetMapping(value = "/{id}/edit")
     public String edit(Model model, @PathVariable("id") int id) {
-        model.addAttribute("user", userService.showId(id));
+        model.addAttribute("user", userService.show(id));
         return "edit";
     }
 
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("user") User user, @PathVariable("id") int id) {
-        userService.updateUser(id, user);
+    public String update(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, @PathVariable("id") int id) {
+        if (bindingResult.hasErrors()){
+            return "edit";
+        }
+        userService.update(id, user);
         return  "redirect:/";
-    }
-
-    @GetMapping(value = "/{id}/dell")
-    public String dell(Model model, @PathVariable("id") int id) {
-        model.addAttribute("user", userService.showId(id));
-        return "dell";
     }
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") int id) {
-        userService.dellUser(id);
+        userService.delete(id);
         return  "redirect:/";
     }
 }
